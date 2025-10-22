@@ -1,0 +1,145 @@
+import tkinter as tk  
+import sqlite3
+from tkinter import messagebox
+from tkinter import ttk
+
+# criando o banco de dados 
+def conectar():
+    return sqlite3.connect('usuarios.db')
+
+
+# criando a tabela do banco de dados
+def create_table():
+    conn = conectar()
+    c  =  conn.cursor()
+    c.execute('''
+     CREATE TABLE IF NOT EXISTS usuarios(
+              id INTEGER PRIMARY KEY,
+              nome TEXT,
+              email TEXT,
+              telefone TEXT,
+              endereco TEXT
+              )   
+    ''')
+    conn.commit()
+    conn.close()
+
+# create
+def inserir_usuario():
+    nome = entry_nome.get()
+    email = entry_email.get()
+    telefone = entry_telefone.get()
+    endereco = entry_endereco.get()
+
+    if nome and email and telefone and endereco: 
+        conn = conectar()
+        c = conn.cursor()
+        c.execute('INSERT INTO usuarios(nome, email, telefone, endereco) VALUES(?, ?, ?, ?)',(nome , email , telefone , endereco,))
+        conn.commit()
+        conn.close()
+        
+        messagebox.showinfo('', 'Dados salvos')
+        mostrar_usuarios()
+    else:
+        messagebox.showerror('', 'ocorreu um erro')    
+# read
+def mostrar_usuarios():
+    for row in tree.get_children():
+        tree.delete(row)
+
+    conn = conectar()
+    c = conn.cursor()
+    c.execute('SELECT * FROM usuarios')
+    usuarios  =  c.fetchall()
+    for usuario in usuarios:
+        tree.insert("", "end", values = (usuario[0], usuario[1], usuario[2], usuario[3], usuario[4]))
+    conn.close()        
+
+# delete
+def eliminar_usuario():
+    selecionar  =  tree.selection()
+
+    if selecionar:
+        user_id =  tree.item(selecionar)['values'][0]
+        conn = conectar()
+        c =  conn.cursor()
+        c.execute('DELETE FROM usuarios WHERE id = ? ', (user_id,))
+        conn.commit()
+        conn.close()
+        messagebox.showinfo('', 'Dado eliminado')
+        mostrar_usuarios()
+    else:
+        messagebox.showerror('erro', 'Erro ao deletar!!')
+
+# update 
+def atualizar_usuario():
+    selecionar  =  tree.selection()
+
+    if selecionar:
+        user_id =  tree.item(selecionar)['values'][0]
+        novo_nome = entry_nome.get()
+        novo_email  = entry_email.get()
+        novo_telefone  = entry_telefone.get()
+        novo_endereco  = entry_endereco.get()
+
+        if novo_nome and novo_email and novo_telefone and novo_endereco:
+           conn = conectar()
+           c =  conn.cursor()
+
+           c.execute('UPDATE usuarios SET nome = ?, email = ?, telefone = ?, endereco = ? WHERE id = ?',
+                     (novo_nome, novo_email, novo_telefone, novo_endereco, user_id))
+            
+           conn.commit()
+           conn.close()
+           messagebox.showinfo('', 'Dados Atualizados')
+           mostrar_usuarios()
+        else:
+            messagebox.showerror('', 'Algo deu errado')
+
+               
+
+janela  =  tk.Tk()
+janela.title('CRUD  -  CREAD | READ | UPDATE | DELETE')
+
+label_nome  =  tk.Label(janela, text='NOME: ')
+label_nome.grid(row=0,column=0, padx=10, pady=10)
+entry_nome  =  tk.Entry(janela)
+entry_nome.grid(row=0, column=1, padx=10, pady=10)
+
+labeL_email  =  tk.Label(janela, text  = 'EMAIL: ')
+labeL_email.grid(row=1, column=0, padx=10, pady=10)
+entry_email = tk.Entry(janela)
+entry_email.grid(row=1, column=1, padx=10, pady=10 )
+
+labeL_telefone  =  tk.Label(janela, text  = 'TELEFONE: ')
+labeL_telefone.grid(row=2, column=0, padx=10, pady=10)
+entry_telefone = tk.Entry(janela)
+entry_telefone.grid(row=2, column=1, padx=10, pady=10 )
+
+labeL_endereco  =  tk.Label(janela, text  = 'ENDEREÇO: ')
+labeL_endereco.grid(row=3, column=0, padx=10, pady=10)
+entry_endereco = tk.Entry(janela)
+entry_endereco.grid(row=3, column=1, padx=10, pady=10 )
+
+btn_agregar = tk.Button(janela, text='Salvar dados', command=inserir_usuario)
+btn_agregar.grid(row=4, column=1, padx=10, pady=10)
+
+btn_del = tk.Button(janela, text='Deletar dados', command = eliminar_usuario)
+btn_del.grid(row=5, column=1, padx=10, pady=10)
+
+btn_atualizar = tk.Button(janela, text='Atualizar dados', command = atualizar_usuario)
+btn_atualizar.grid(row=6, column=1, padx=10, pady=10)
+
+columns  =  ('ID', 'NOME', 'EMAIL', 'TELEFONE', 'ENDERECO')
+tree = ttk.Treeview(janela, columns=columns, show='headings')
+tree.grid(row=7, column=0, columnspan=2, padx=10)
+
+for col in columns:
+    tree.heading(col, text=col)
+
+
+create_table()
+mostrar_usuarios
+
+
+janela.mainloop()
