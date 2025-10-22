@@ -9,6 +9,9 @@ def conectar():
 
 
 # criando a tabela do banco de dados
+
+# Foi adicionada os itens ao banco de dados
+
 def create_table():
     conn = conectar()
     c  =  conn.cursor()
@@ -25,6 +28,10 @@ def create_table():
     conn.close()
 
 # create
+
+
+# Foi adicionado novos itens para salvar os dados
+
 def inserir_usuario():
     nome = entry_nome.get()
     email = entry_email.get()
@@ -43,6 +50,10 @@ def inserir_usuario():
     else:
         messagebox.showerror('', 'ocorreu um erro')    
 # read
+
+
+# Foi feito a colocação dos itens na pagina, que foi adicionados no banco de dados
+
 def mostrar_usuarios():
     for row in tree.get_children():
         tree.delete(row)
@@ -56,6 +67,10 @@ def mostrar_usuarios():
     conn.close()        
 
 # delete
+
+
+#foi feito a remoção dos novos itens adicionados a lista
+
 def eliminar_usuario():
     selecionar  =  tree.selection()
 
@@ -72,6 +87,9 @@ def eliminar_usuario():
         messagebox.showerror('erro', 'Erro ao deletar!!')
 
 # update 
+
+# Atualização dos itens
+
 def atualizar_usuario():
     selecionar  =  tree.selection()
 
@@ -97,6 +115,7 @@ def atualizar_usuario():
             messagebox.showerror('', 'Algo deu errado')
 
                
+#A mudança de nome, e itens adicionados
 
 janela  =  tk.Tk()
 janela.title('CRUD  -  CREAD | READ | UPDATE | DELETE')
