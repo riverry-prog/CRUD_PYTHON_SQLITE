@@ -1,12 +1,10 @@
 # Readme de exemplo
 
-# Título do repositório🚀
+# Crud_python🚀
 
 Um parágrafo da descrição do projeto vai aqui
 
 # 🔌Como fazer funcionar na sua máquina:
-instale o Python na sua máquina
-Instale o VsCode
 
 - instale o Python na sua máquina
 - Instale o VsCode
@@ -14,20 +12,16 @@ Instale o VsCode
 # 📋Pré-requisitos do sistema:
 
 > A partir do python 3.8
-> 
 
 ## 🛠️Tecnologias utilizadas:
 
 > Editor de código
-Linguagens Python
-Bibliotecas
-> 
+> Linguagens Python
+> Bibliotecas
 
 ## Versões:
 
-> Python 3.10
-> 
+> Python 3.8
 
 ## Autores:
-Riverry Morato Cardoso
 > Riverry Morato Cardoso
